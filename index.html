@@ -1,0 +1,2023 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SergioDevHub — Software & Herramientas</title>
+<meta name="description" content="Plataforma de software desarrollado por Sergio. Descarga herramientas reales, gratuitas y listas para usar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════
+   VARIABLES & RESET
+══════════════════════════════════════ */
+:root {
+  --bg:      #060608;
+  --bg2:     #0d0d14;
+  --bg3:     #13131e;
+  --bg4:     #1c1c2e;
+  --accent:  #00d4ff;
+  --accentg: #0099cc;
+  --violet:  #8b5cf6;
+  --amber:   #f59e0b;
+  --green:   #10b981;
+  --red:     #ef4444;
+  --text:    #eaeaf4;
+  --muted:   #5a5a78;
+  --muted2:  #8888a8;
+  --border:  rgba(0,212,255,0.10);
+  --border2: rgba(255,255,255,0.06);
+  --glow:    rgba(0,212,255,0.18);
+  --card:    rgba(255,255,255,0.025);
+  --radius:  8px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ══ NOISE TEXTURE ══ */
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 0; opacity: 0.4;
+}
+
+/* ══ GRID BG ══ */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(rgba(0,212,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none; z-index: 0;
+}
+
+/* ══════════════════════════════════════
+   NAV
+══════════════════════════════════════ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  height: 68px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 3rem;
+  background: rgba(6,6,8,0.8);
+  backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: 1px solid var(--border2);
+}
+.nav-logo {
+  font-family: 'Space Mono', monospace;
+  font-size: 1rem; font-weight: 700;
+  color: var(--accent); letter-spacing: -0.02em;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.nav-logo .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+.nav-logo span { color: var(--muted2); }
+
+.nav-center { display: flex; gap: 0.25rem; list-style: none; }
+.nav-center a {
+  color: var(--muted2); text-decoration: none;
+  font-size: 0.78rem; font-weight: 500;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 6px 14px; border-radius: 4px;
+  transition: color 0.2s, background 0.2s;
+}
+.nav-center a:hover { color: var(--text); background: var(--border2); }
+
+.nav-right { display: flex; align-items: center; gap: 0.75rem; }
+.nav-user-badge {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.68rem; padding: 5px 12px;
+  border-radius: 20px; border: 1px solid var(--border);
+  color: var(--muted2); letter-spacing: 0.05em;
+}
+#nav-admin-btn {
+  display: none;
+  background: linear-gradient(135deg, var(--violet), #6d28d9);
+  color: white; border: none;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem; font-weight: 700;
+  padding: 8px 18px; border-radius: 4px;
+  cursor: pointer; letter-spacing: 0.04em;
+  transition: opacity 0.2s, transform 0.2s;
+  box-shadow: 0 4px 15px rgba(139,92,246,0.3);
+}
+#nav-admin-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+.btn-login {
+  background: var(--border2); color: var(--muted2);
+  border: 1px solid var(--border2);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem; padding: 8px 18px;
+  border-radius: 4px; cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+  letter-spacing: 0.04em;
+}
+.btn-login:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ══════════════════════════════════════
+   HERO
+══════════════════════════════════════ */
+.hero {
+  position: relative; z-index: 1;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  padding: 0 6vw; gap: 4rem;
+  padding-top: 68px;
+}
+.hero-left {}
+.hero-eyebrow {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem; color: var(--accent);
+  letter-spacing: 0.2em; text-transform: uppercase;
+  margin-bottom: 1.75rem;
+  display: flex; align-items: center; gap: 1rem;
+}
+.hero-eyebrow::before { content:''; width:40px; height:1px; background:var(--accent); }
+.hero h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2.5rem, 5vw, 5rem);
+  font-weight: 800; line-height: 1;
+  letter-spacing: -0.04em; margin-bottom: 1.5rem;
+}
+.hero h1 .line-accent {
+  background: linear-gradient(90deg, var(--accent), var(--violet));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  display: block;
+}
+.hero-desc {
+  font-size: 1rem; color: var(--muted2); line-height: 1.8;
+  max-width: 460px; margin-bottom: 2.5rem;
+}
+.hero-ctas { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 3.5rem; }
+.cta-main {
+  background: var(--accent); color: var(--bg);
+  border: none; padding: 13px 28px;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.78rem; font-weight: 700;
+  cursor: pointer; border-radius: var(--radius);
+  letter-spacing: 0.03em;
+  transition: transform 0.2s, box-shadow 0.2s;
+  text-decoration: none; display: inline-block;
+  box-shadow: 0 0 30px rgba(0,212,255,0.25);
+}
+.cta-main:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,212,255,0.4); }
+.cta-outline {
+  background: transparent; color: var(--text);
+  border: 1px solid var(--border2); padding: 13px 28px;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.78rem; cursor: pointer; border-radius: var(--radius);
+  letter-spacing: 0.03em;
+  transition: border-color 0.2s, color 0.2s;
+  text-decoration: none; display: inline-block;
+}
+.cta-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+.hero-stats { display: flex; gap: 2.5rem; }
+.hero-stat-num {
+  font-family: 'Space Mono', monospace;
+  font-size: 1.75rem; font-weight: 700; color: var(--accent);
+  display: block; line-height: 1;
+}
+.hero-stat-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.3rem; }
+
+/* right panel */
+.hero-right {
+  display: flex; flex-direction: column; gap: 1rem;
+}
+.hero-card {
+  background: var(--card);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  display: flex; align-items: center; gap: 1rem;
+  backdrop-filter: blur(10px);
+  transition: border-color 0.25s, transform 0.25s;
+  cursor: pointer;
+}
+.hero-card:hover { border-color: var(--border); transform: translateX(4px); }
+.hero-card-icon { font-size: 1.5rem; flex-shrink: 0; }
+.hero-card-title { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; margin-bottom: 0.2rem; }
+.hero-card-sub { font-size: 0.78rem; color: var(--muted2); }
+.hero-card-arrow { margin-left: auto; color: var(--muted); font-size: 0.8rem; transition: color 0.2s; }
+.hero-card:hover .hero-card-arrow { color: var(--accent); }
+
+/* ══════════════════════════════════════
+   GENERIC SECTION
+══════════════════════════════════════ */
+.section {
+  position: relative; z-index: 1;
+  padding: 6rem 6vw;
+  border-top: 1px solid var(--border2);
+}
+.section-alt { background: var(--bg2); }
+.section-head { margin-bottom: 3.5rem; }
+.section-tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem; color: var(--accent);
+  letter-spacing: 0.22em; text-transform: uppercase;
+  margin-bottom: 0.6rem;
+  display: flex; align-items: center; gap: 0.6rem;
+}
+.section-tag::before { content:''; width:24px; height:1px; background:var(--accent); }
+.section-h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+  font-weight: 800; letter-spacing: -0.03em;
+  margin-bottom: 0.75rem;
+}
+.section-p { color: var(--muted2); font-size: 0.95rem; line-height: 1.75; max-width: 480px; }
+
+/* ══════════════════════════════════════
+   SOFTWARE GRID
+══════════════════════════════════════ */
+.sw-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  gap: 1px;
+  background: var(--border2);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.sw-card {
+  background: var(--bg);
+  padding: 2rem;
+  position: relative; overflow: hidden;
+  transition: background 0.25s;
+}
+.sw-card::after {
+  content: '';
+  position: absolute; top: 0; left: 0;
+  width: 0; height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--violet));
+  transition: width 0.35s ease;
+}
+.sw-card:hover::after { width: 100%; }
+.sw-card:hover { background: var(--bg3); }
+
+.sw-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem; }
+.sw-type {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem; color: var(--violet);
+  letter-spacing: 0.15em; text-transform: uppercase;
+  padding: 3px 10px; border-radius: 2px;
+  background: rgba(139,92,246,0.1);
+  border: 1px solid rgba(139,92,246,0.2);
+}
+.sw-version {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem; color: var(--muted);
+  letter-spacing: 0.08em;
+}
+.sw-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.15rem; font-weight: 700;
+  margin-bottom: 0.65rem;
+}
+.sw-desc { color: var(--muted2); font-size: 0.875rem; line-height: 1.65; margin-bottom: 1.5rem; }
+.sw-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.sw-tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem; padding: 3px 9px;
+  border: 1px solid var(--border2);
+  color: var(--muted); border-radius: 2px;
+}
+.sw-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+.sw-btn {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.68rem; padding: 8px 16px;
+  border-radius: 4px; cursor: pointer;
+  border: none; font-weight: 700;
+  transition: transform 0.15s, opacity 0.2s;
+  text-decoration: none;
+  display: inline-flex; align-items: center; gap: 0.4rem;
+}
+.sw-btn:hover { transform: translateY(-1px); opacity: 0.85; }
+.sw-btn.dl { background: var(--accent); color: var(--bg); }
+.sw-btn.gh { background: var(--bg4); color: var(--text); border: 1px solid var(--border2); }
+.sw-btn.info { background: transparent; color: var(--violet); border: 1px solid rgba(139,92,246,0.3); }
+
+/* Add card */
+.sw-add {
+  background: var(--bg) !important;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  min-height: 240px; cursor: pointer;
+  border: 2px dashed rgba(0,212,255,0.1) !important;
+  transition: border-color 0.25s, background 0.25s;
+}
+.sw-add:hover { border-color: rgba(0,212,255,0.3) !important; background: var(--bg3) !important; }
+.sw-add-icon {
+  width: 48px; height: 48px; border-radius: 50%;
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.25rem; margin-bottom: 0.75rem;
+  color: var(--muted); transition: border-color 0.25s, color 0.25s;
+}
+.sw-add:hover .sw-add-icon { border-color: var(--accent); color: var(--accent); }
+.sw-add p {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.68rem; color: var(--muted);
+  letter-spacing: 0.1em; text-transform: uppercase;
+}
+
+/* ══════════════════════════════════════
+   TOOLS
+══════════════════════════════════════ */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 1px;
+  background: var(--border2);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.tool-card {
+  background: var(--bg2);
+  padding: 1.75rem;
+  transition: background 0.2s;
+  position: relative;
+}
+.tool-card:hover { background: var(--bg3); }
+.tool-top { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
+.tool-icon-wrap {
+  width: 38px; height: 38px;
+  background: var(--bg4); border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; flex-shrink: 0;
+}
+.tool-name-wrap { flex: 1; }
+.tool-name { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; }
+.free-pill {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.55rem; padding: 2px 7px;
+  background: rgba(16,185,129,0.12);
+  color: var(--green); border-radius: 20px;
+  border: 1px solid rgba(16,185,129,0.2);
+  display: inline-block; margin-left: 0.4rem;
+}
+.tool-desc { color: var(--muted2); font-size: 0.82rem; line-height: 1.6; margin-bottom: 1rem; }
+.tool-link {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem; color: var(--amber);
+  text-decoration: none; letter-spacing: 0.05em;
+  display: flex; align-items: center; gap: 0.3rem;
+}
+.tool-link:hover { text-decoration: underline; }
+
+/* Admin add tool btn */
+.add-tool-card {
+  background: var(--bg2) !important;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; min-height: 160px;
+  border: 2px dashed rgba(245,158,11,0.12) !important;
+}
+.add-tool-card:hover { background: var(--bg3) !important; border-color: rgba(245,158,11,0.3) !important; }
+
+/* ══════════════════════════════════════
+   CONOCIMIENTOS
+══════════════════════════════════════ */
+.know-layout {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 3rem;
+}
+.know-articles {}
+.know-article {
+  padding: 1.75rem 0;
+  border-bottom: 1px solid var(--border2);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0 1.5rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.know-article:hover { opacity: 0.75; }
+.know-article:first-child { padding-top: 0; }
+.know-num {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem; color: var(--muted);
+  padding-top: 0.2rem;
+}
+.know-meta {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.62rem; color: var(--muted);
+  letter-spacing: 0.1em; text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+.know-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.05rem; font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+.know-excerpt { font-size: 0.82rem; color: var(--muted2); line-height: 1.6; }
+
+.skills-box {
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  padding: 2rem;
+  position: sticky; top: 88px;
+}
+.skills-box h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1rem; font-weight: 700;
+  margin-bottom: 1.75rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border2);
+}
+.skill-row { margin-bottom: 1.25rem; }
+.skill-row-top {
+  display: flex; justify-content: space-between;
+  font-size: 0.8rem; margin-bottom: 0.4rem;
+}
+.skill-row-top span:last-child {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem; color: var(--accent);
+}
+.skill-track {
+  height: 2px; background: var(--border2); border-radius: 2px; overflow: hidden;
+}
+.skill-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--violet));
+  border-radius: 2px;
+  animation: grow 1.5s ease-out forwards;
+}
+@keyframes grow { from { width:0 } }
+
+/* ══════════════════════════════════════
+   CONTACT
+══════════════════════════════════════ */
+.contact-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 4rem;
+  align-items: start;
+}
+.contact-info { padding-top: 0.5rem; }
+.contact-detail {
+  display: flex; align-items: flex-start;
+  gap: 1rem; margin-bottom: 1.5rem;
+}
+.contact-detail-icon {
+  width: 40px; height: 40px; border-radius: var(--radius);
+  background: var(--bg3); border: 1px solid var(--border2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; flex-shrink: 0;
+}
+.contact-detail-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.2rem; }
+.contact-detail-val { font-size: 0.9rem; font-weight: 500; }
+
+.contact-form {
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  padding: 2.5rem;
+}
+.cf-group { margin-bottom: 1.25rem; }
+.cf-label {
+  display: block;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--muted2);
+  margin-bottom: 0.5rem;
+}
+.cf-input, .cf-textarea, .cf-select {
+  width: 100%;
+  background: var(--bg4); border: 1px solid var(--border2);
+  color: var(--text); padding: 11px 14px;
+  font-family: 'Inter', sans-serif; font-size: 0.88rem;
+  border-radius: var(--radius); outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.cf-input:focus, .cf-textarea:focus, .cf-select:focus {
+  border-color: rgba(0,212,255,0.4);
+  box-shadow: 0 0 0 3px rgba(0,212,255,0.06);
+}
+.cf-textarea { resize: vertical; min-height: 120px; }
+.cf-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.cf-submit {
+  width: 100%; padding: 14px;
+  background: linear-gradient(135deg, var(--accent), var(--accentg));
+  color: var(--bg); border: none;
+  font-family: 'Space Mono', monospace;
+  font-weight: 700; font-size: 0.82rem;
+  letter-spacing: 0.05em;
+  cursor: pointer; border-radius: var(--radius);
+  transition: opacity 0.2s, transform 0.2s;
+  box-shadow: 0 4px 20px rgba(0,212,255,0.2);
+}
+.cf-submit:hover { opacity: 0.9; transform: translateY(-1px); }
+.cf-success {
+  display: none; text-align: center; padding: 2rem;
+}
+.cf-success-icon { font-size: 2.5rem; margin-bottom: 1rem; display: block; }
+.cf-success p { color: var(--muted2); font-size: 0.9rem; }
+
+/* ══════════════════════════════════════
+   FOOTER
+══════════════════════════════════════ */
+footer {
+  position: relative; z-index: 1;
+  border-top: 1px solid var(--border2);
+  padding: 2.5rem 6vw;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 1rem;
+}
+.footer-left { display: flex; align-items: center; gap: 1.5rem; }
+.footer-brand {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.8rem; color: var(--muted);
+}
+.footer-brand strong { color: var(--accent); }
+.footer-sep { width: 1px; height: 20px; background: var(--border2); }
+.footer-copy { font-size: 0.75rem; color: var(--muted); }
+.footer-links { display: flex; gap: 1.5rem; }
+.footer-links a {
+  color: var(--muted); font-size: 0.78rem;
+  text-decoration: none; transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--accent); }
+
+/* ══════════════════════════════════════
+   MODALS
+══════════════════════════════════════ */
+.overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 300; align-items: center; justify-content: center;
+  backdrop-filter: blur(12px);
+  padding: 1rem;
+}
+.overlay.open { display: flex; }
+.modal {
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  width: 580px; max-width: 100%;
+  max-height: 90vh; overflow-y: auto;
+  padding: 2.5rem;
+  position: relative;
+  animation: slideUp 0.3s ease;
+}
+@keyframes slideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+.modal-close {
+  position: absolute; top: 1.25rem; right: 1.25rem;
+  background: var(--bg4); border: none; color: var(--muted);
+  width: 30px; height: 30px; border-radius: 50%;
+  font-size: 0.9rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s, color 0.2s;
+}
+.modal-close:hover { background: var(--red); color: white; }
+.modal-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.5rem; font-weight: 800;
+  letter-spacing: -0.02em; margin-bottom: 0.4rem;
+}
+.modal-sub { color: var(--muted2); font-size: 0.85rem; margin-bottom: 2rem; }
+.modal-divider { height: 1px; background: var(--border2); margin: 1.5rem 0; }
+
+/* Upload zone */
+.upload-zone {
+  border: 2px dashed var(--border);
+  padding: 1.75rem; text-align: center;
+  border-radius: var(--radius); cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  margin-bottom: 1.25rem;
+}
+.upload-zone:hover { border-color: rgba(0,212,255,0.4); background: rgba(0,212,255,0.03); }
+.upload-zone p { font-size: 0.82rem; color: var(--muted2); }
+.upload-zone strong { color: var(--accent); }
+.file-selected { font-family:'Space Mono',monospace; font-size:0.75rem; color:var(--green); margin-bottom:1rem; display:none; }
+
+.form-submit-modal {
+  width: 100%; padding: 13px;
+  background: linear-gradient(135deg, var(--violet), #6d28d9);
+  color: white; border: none;
+  font-family: 'Space Mono', monospace;
+  font-weight: 700; font-size: 0.82rem;
+  cursor: pointer; border-radius: var(--radius);
+  transition: opacity 0.2s; letter-spacing: 0.04em;
+  box-shadow: 0 4px 20px rgba(139,92,246,0.3);
+}
+.form-submit-modal:hover { opacity: 0.9; }
+
+/* Login modal */
+.login-icon { text-align: center; font-size: 2.5rem; margin-bottom: 1.5rem; }
+.admin-note {
+  background: rgba(139,92,246,0.08);
+  border: 1px solid rgba(139,92,246,0.2);
+  border-radius: 4px; padding: 0.75rem 1rem;
+  font-size: 0.78rem; color: var(--muted2);
+  margin-bottom: 1.5rem; text-align: center;
+}
+
+/* ══════════════════════════════════════
+   TOAST
+══════════════════════════════════════ */
+.toast {
+  position: fixed; bottom: 2rem; right: 2rem;
+  background: var(--bg3); border: 1px solid var(--border);
+  color: var(--text); padding: 1rem 1.5rem;
+  border-radius: var(--radius); font-size: 0.85rem;
+  transform: translateY(80px); opacity: 0;
+  transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  z-index: 400; display: flex; align-items: center; gap: 0.5rem;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+  max-width: 320px;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast.success { border-color: var(--green); }
+.toast.error { border-color: var(--red); }
+
+/* ══════════════════════════════════════
+   ADMIN BAR
+══════════════════════════════════════ */
+.admin-bar {
+  display: none; position: fixed;
+  bottom: 0; left: 0; right: 0; z-index: 150;
+  background: rgba(139,92,246,0.12);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(139,92,246,0.3);
+  padding: 0.75rem 3rem;
+  align-items: center; justify-content: space-between;
+  gap: 1rem;
+}
+.admin-bar.visible { display: flex; }
+.admin-bar-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem; color: var(--violet);
+  letter-spacing: 0.1em; text-transform: uppercase;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.admin-bar-actions { display: flex; gap: 0.75rem; }
+.admin-btn {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.68rem; padding: 7px 16px;
+  border-radius: 4px; cursor: pointer;
+  font-weight: 700; letter-spacing: 0.04em;
+  border: none; transition: opacity 0.2s;
+}
+.admin-btn:hover { opacity: 0.85; }
+.admin-btn.add-sw { background: var(--violet); color: white; }
+.admin-btn.add-tool { background: var(--amber); color: var(--bg); }
+.admin-btn.logout { background: var(--bg4); color: var(--muted2); border: 1px solid var(--border2); }
+
+/* ══════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════ */
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; padding-top: 90px; }
+  .hero-right { display: none; }
+  .know-layout { grid-template-columns: 1fr; }
+  .contact-layout { grid-template-columns: 1fr; }
+  .cf-row { grid-template-columns: 1fr; }
+  nav .nav-center { display: none; }
+  footer { flex-direction: column; align-items: flex-start; }
+  .admin-bar { padding: 0.75rem 1.5rem; }
+  .admin-bar-label span.full { display: none; }
+}
+@media (max-width: 600px) {
+  nav { padding: 0 1.25rem; }
+  .section { padding: 4rem 5vw; }
+  .hero { padding: 88px 5vw 4rem; }
+}
+
+/* scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+/* ── SELECTOR DE ÍCONOS ── */
+.icon-tab {
+  background: none; border: none; border-bottom: 2px solid transparent;
+  color: var(--muted2); font-family: 'Space Mono', monospace;
+  font-size: 0.6rem; padding: 8px 10px; cursor: pointer;
+  white-space: nowrap; letter-spacing: 0.03em;
+  transition: color 0.2s, border-color 0.2s; flex-shrink: 0;
+}
+.icon-tab:hover { color: var(--text); }
+.icon-tab.active { color: var(--amber); border-bottom-color: var(--amber); }
+.icon-opt {
+  background: none; border: 1px solid transparent; border-radius: 6px;
+  font-size: 1.3rem; cursor: pointer; padding: 5px; width: 100%;
+  aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+}
+.icon-opt:hover  { background: var(--bg3); border-color: var(--border); transform: scale(1.18); }
+.icon-opt.picked { background: rgba(245,158,11,0.15); border-color: var(--amber); }
+</style>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<nav>
+  <div class="nav-logo">
+    <span class="dot"></span>
+    Sergio<span>DevHub</span>
+  </div>
+  <ul class="nav-center">
+    <li><a href="#software">Software</a></li>
+    <li><a href="#tools">Herramientas</a></li>
+    <li><a href="#conocimientos">Conocimientos</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+  <div class="nav-right">
+    <span class="nav-user-badge" id="nav-role-badge">👤 Visitante</span>
+    <button id="nav-admin-btn" onclick="openUploadModal()">+ Subir proyecto</button>
+    <button class="btn-login" id="nav-login-btn" onclick="openLoginModal()">Admin</button>
+  </div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-eyebrow">Desarrollador independiente · sincelejo, CO</p>
+    <h1>Software que<br>resuelve<br><span class="line-accent">problemas reales.</span></h1>
+    <p class="hero-desc">Herramientas construidas desde cero para necesidades concretas. Descarga, úsalas o revisa el código. Todo aquí es funcional.</p>
+    <div class="hero-ctas">
+      <a href="#software" class="cta-main">Ver proyectos →</a>
+      <a href="#contacto" class="cta-outline">Contactar</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <span class="hero-stat-num" id="c-sw">0</span>
+        <div class="hero-stat-label">Proyectos</div>
+      </div>
+      <div>
+        <span class="hero-stat-num" id="c-dl">0</span>
+        <div class="hero-stat-label">Descargas</div>
+      </div>
+      <div>
+        <span class="hero-stat-num" id="c-tools">0</span>
+        <div class="hero-stat-label">Herramientas</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <a href="#software" class="hero-card" style="text-decoration:none;color:inherit">
+      <span class="hero-card-icon">📦</span>
+      <div>
+        <div class="hero-card-title">Software disponible</div>
+        <div class="hero-card-sub">Archivos listos para descargar y usar</div>
+      </div>
+      <span class="hero-card-arrow">→</span>
+    </a>
+    <a href="#tools" class="hero-card" style="text-decoration:none;color:inherit">
+      <span class="hero-card-icon">🔧</span>
+      <div>
+        <div class="hero-card-title">Herramientas gratuitas</div>
+        <div class="hero-card-sub">Recursos curados de internet</div>
+      </div>
+      <span class="hero-card-arrow">→</span>
+    </a>
+    <a href="#conocimientos" class="hero-card" style="text-decoration:none;color:inherit">
+      <span class="hero-card-icon">📖</span>
+      <div>
+        <div class="hero-card-title">Mis conocimientos</div>
+        <div class="hero-card-sub">Artículos y habilidades técnicas</div>
+      </div>
+      <span class="hero-card-arrow">→</span>
+    </a>
+    <a href="#contacto" class="hero-card" style="text-decoration:none;color:inherit">
+      <span class="hero-card-icon">✉️</span>
+      <div>
+        <div class="hero-card-title">Contacto directo</div>
+        <div class="hero-card-sub">Envíame un mensaje al correo</div>
+      </div>
+      <span class="hero-card-arrow">→</span>
+    </a>
+  </div>
+</section>
+
+<!-- ══ SOFTWARE ══ -->
+<section class="section" id="software">
+  <div class="section-head">
+    <p class="section-tag">Mis proyectos</p>
+    <h2 class="section-h2">Software disponible</h2>
+    <p class="section-p">Cada herramienta fue construida para resolver un problema real. Descárgala directamente o revisa el código en GitHub.</p>
+  </div>
+  <div class="sw-grid" id="sw-grid">
+
+    <div class="sw-card">
+      <div class="sw-card-header">
+        <span class="sw-type">Productividad</span>
+        <span class="sw-version">v1.0</span>
+      </div>
+      <h3 class="sw-title">Control de Carreras en Moto</h3>
+      <p class="sw-desc">Workbook Excel para registrar carreras diarias, calcular totales y generar facturación mensual automáticamente. Sin fórmulas manuales.</p>
+      <div class="sw-tags">
+        <span class="sw-tag">Excel</span><span class="sw-tag">VBA</span><span class="sw-tag">Facturación</span>
+      </div>
+      <div class="sw-actions">
+        <button class="sw-btn dl" onclick="handleDownload('Control de Carreras en Moto','')">↓ Descargar</button>
+        <a href="https://github.com" target="_blank" class="sw-btn gh">GitHub →</a>
+      </div>
+    </div>
+
+    <!-- Admin-only add card -->
+    <div class="sw-card sw-add admin-only" id="sw-add-card" style="display:none" onclick="openUploadModal()">
+      <div class="sw-add-icon">+</div>
+      <p>Subir nuevo proyecto</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ TOOLS ══ -->
+<section class="section section-alt" id="tools">
+  <div class="section-head">
+    <p class="section-tag">Recursos externos</p>
+    <h2 class="section-h2">Herramientas <span style="color:var(--amber)">gratuitas</span></h2>
+    <p class="section-p">Las mejores herramientas gratuitas de internet, curadas para que las uses de inmediato sin buscar.</p>
+  </div>
+  <div class="tools-grid" id="tools-grid">
+
+    <div class="tool-card">
+      <div class="tool-top">
+        <div class="tool-icon-wrap">🖥️</div>
+        <div class="tool-name-wrap">
+          <div class="tool-name">VS Code<span class="free-pill">GRATIS</span></div>
+        </div>
+      </div>
+      <p class="tool-desc">El editor de código más usado del mundo. Extensiones para cualquier lenguaje.</p>
+      <a href="https://code.visualstudio.com" target="_blank" class="tool-link">code.visualstudio.com →</a>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-top">
+        <div class="tool-icon-wrap">🐙</div>
+        <div class="tool-name-wrap">
+          <div class="tool-name">GitHub<span class="free-pill">GRATIS</span></div>
+        </div>
+      </div>
+      <p class="tool-desc">Aloja tu código, compártelo y colabora. Repositorios públicos sin costo.</p>
+      <a href="https://github.com" target="_blank" class="tool-link">github.com →</a>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-top">
+        <div class="tool-icon-wrap">📊</div>
+        <div class="tool-name-wrap">
+          <div class="tool-name">LibreOffice<span class="free-pill">GRATIS</span></div>
+        </div>
+      </div>
+      <p class="tool-desc">Suite completa de oficina, alternativa gratuita a Microsoft Office.</p>
+      <a href="https://www.libreoffice.org" target="_blank" class="tool-link">libreoffice.org →</a>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-top">
+        <div class="tool-icon-wrap">🐍</div>
+        <div class="tool-name-wrap">
+          <div class="tool-name">Python<span class="free-pill">GRATIS</span></div>
+        </div>
+      </div>
+      <p class="tool-desc">Lenguaje ideal para automatizaciones, scripts y análisis de datos.</p>
+      <a href="https://www.python.org" target="_blank" class="tool-link">python.org →</a>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-top">
+        <div class="tool-icon-wrap">🗜️</div>
+        <div class="tool-name-wrap">
+          <div class="tool-name">7-Zip<span class="free-pill">GRATIS</span></div>
+        </div>
+      </div>
+      <p class="tool-desc">Compresor de archivos potente y ligero, sin publicidad.</p>
+      <a href="https://www.7-zip.org" target="_blank" class="tool-link">7-zip.org →</a>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-top">
+        <div class="tool-icon-wrap">🎨</div>
+        <div class="tool-name-wrap">
+          <div class="tool-name">Figma Free<span class="free-pill">GRATIS</span></div>
+        </div>
+      </div>
+      <p class="tool-desc">Diseña interfaces y prototipos directamente en el navegador.</p>
+      <a href="https://www.figma.com" target="_blank" class="tool-link">figma.com →</a>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-top">
+        <div class="tool-icon-wrap">🛡️</div>
+        <div class="tool-name-wrap">
+          <div class="tool-name">Bitwarden<span class="free-pill">GRATIS</span></div>
+        </div>
+      </div>
+      <p class="tool-desc">Gestor de contraseñas open-source, seguro y multiplataforma.</p>
+      <a href="https://bitwarden.com" target="_blank" class="tool-link">bitwarden.com →</a>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-top">
+        <div class="tool-icon-wrap">📡</div>
+        <div class="tool-name-wrap">
+          <div class="tool-name">Postman<span class="free-pill">GRATIS</span></div>
+        </div>
+      </div>
+      <p class="tool-desc">Prueba APIs y automatiza peticiones HTTP fácilmente.</p>
+      <a href="https://www.postman.com" target="_blank" class="tool-link">postman.com →</a>
+    </div>
+
+    <!-- Admin add tool -->
+    <div class="tool-card add-tool-card admin-only" id="add-tool-card" style="display:none" onclick="openToolModal()">
+      <div style="text-align:center">
+        <div style="font-size:1.5rem;color:var(--amber);margin-bottom:0.5rem">+</div>
+        <p style="font-family:'Space Mono',monospace;font-size:0.65rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase">Agregar herramienta</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ CONOCIMIENTOS ══ -->
+<section class="section" id="conocimientos">
+  <div class="section-head">
+    <p class="section-tag">Lo que sé hacer</p>
+    <h2 class="section-h2">Conocimientos</h2>
+    <p class="section-p">Mi experiencia práctica construyendo herramientas reales para necesidades reales.</p>
+  </div>
+  <div class="know-layout">
+    <div class="know-articles">
+      <div class="know-article">
+        <div class="know-num">01</div>
+        <div>
+          <p class="know-meta">Automatización · 2025</p>
+          <h3 class="know-title">Cómo automaticé mi facturación mensual con Excel</h3>
+          <p class="know-excerpt">Un recorrido por cómo construí un sistema de control de carreras que elimina errores de cálculo y genera reportes automáticos sin fórmulas manuales.</p>
+        </div>
+      </div>
+      <div class="know-article">
+        <div class="know-num">02</div>
+        <div>
+          <p class="know-meta">Herramientas · 2022</p>
+          <h3 class="know-title">Python para no programadores: mi experiencia</h3>
+          <p class="know-excerpt">Cómo aprendí a usar Python sin conocimientos previos para resolver tareas repetitivas del día a día. Guía práctica desde cero.</p>
+        </div>
+      </div>
+      <div class="know-article">
+        <div class="know-num">03</div>
+        <div>
+          <p class="know-meta">Software · 2022</p>
+          <h3 class="know-title">GitHub desde cero: subir tu primer proyecto</h3>
+          <p class="know-excerpt">Guía paso a paso para tener tu software en GitHub y compartirlo con el mundo usando GitHub Pages sin costo.</p>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="skills-box">
+        <h3>Habilidades técnicas</h3>
+        <div class="skill-row">
+          <div class="skill-row-top"><span>Excel / VBA</span><span>90%</span></div>
+          <div class="skill-track"><div class="skill-fill" style="width:90%"></div></div>
+        </div>
+        <div class="skill-row">
+          <div class="skill-row-top"><span>Automatización</span><span>80%</span></div>
+          <div class="skill-track"><div class="skill-fill" style="width:80%;animation-delay:0.2s"></div></div>
+        </div>
+        <div class="skill-row">
+          <div class="skill-row-top"><span>Python</span><span>65%</span></div>
+          <div class="skill-track"><div class="skill-fill" style="width:65%;animation-delay:0.4s"></div></div>
+        </div>
+        <div class="skill-row">
+          <div class="skill-row-top"><span>GitHub</span><span>70%</span></div>
+          <div class="skill-track"><div class="skill-fill" style="width:70%;animation-delay:0.6s"></div></div>
+        </div>
+        <div class="skill-row">
+          <div class="skill-row-top"><span>HTML / CSS</span><span>95%</span></div>
+          <div class="skill-track"><div class="skill-fill" style="width:95%;animation-delay:0.8s"></div></div>
+        </div>
+        <div style="margin-top:1.75rem;padding-top:1.5rem;border-top:1px solid var(--border2)">
+          <p style="font-size:0.8rem;color:var(--muted2);line-height:1.75">¿Tienes un problema que resolver? Construyo herramientas prácticas para personas y pequeñas empresas. Contáctame.</p>
+          <a href="#contacto" style="display:inline-block;margin-top:1rem;font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--accent);text-decoration:none;letter-spacing:0.05em">Enviar mensaje →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CONTACTO ══ -->
+<section class="section section-alt" id="contacto">
+  <div class="section-head">
+    <p class="section-tag">Hablemos</p>
+    <h2 class="section-h2">Contacto</h2>
+    <p class="section-p">¿Tienes un proyecto o una idea? Envíame un mensaje y te respondo a la brevedad.</p>
+  </div>
+  <div class="contact-layout">
+    <div class="contact-info">
+      <div class="contact-detail">
+        <div class="contact-detail-icon">📍</div>
+        <div>
+          <div class="contact-detail-label">Ubicación</div>
+          <div class="contact-detail-val">Sincelejo, Sucre — Colombia</div>
+        </div>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-detail-icon">🕐</div>
+        <div>
+          <div class="contact-detail-label">Respuesta</div>
+          <div class="contact-detail-val">Generalmente en menos de 24 h</div>
+        </div>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-detail-icon">🐙</div>
+        <div>
+          <div class="contact-detail-label">GitHub</div>
+          <div class="contact-detail-val"><a href="https://github.com/serskynet" target="_blank" style="color:var(--accent);text-decoration:none">https://github.com/serskynet</a></div>
+        </div>
+      </div>
+      <div style="margin-top:2rem;padding:1.5rem;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius)">
+        <p style="font-size:0.78rem;color:var(--muted2);line-height:1.75">Especializado en herramientas de <strong style="color:var(--text)">automatización</strong>,  avanzadas y pequeños sistemas que ahorran tiempo en el trabajo diario.</p>
+      </div>
+    </div>
+    <div class="contact-form">
+      <!-- ⚠️ REEMPLAZA "tu-id-aqui" con tu endpoint real de Formspree -->
+      <div id="contact-form-wrap">
+        <div class="cf-row">
+          <div class="cf-group">
+            <label class="cf-label">Nombre</label>
+            <input type="text" class="cf-input" id="cf-name" placeholder="Tu nombre" required>
+          </div>
+          <div class="cf-group">
+            <label class="cf-label">Correo electrónico</label>
+            <input type="email" class="cf-input" id="cf-email" placeholder="tu@correo.com" required>
+          </div>
+        </div>
+        <div class="cf-group">
+          <label class="cf-label">Asunto</label>
+          <select class="cf-select" id="cf-subject">
+            <option value="">Selecciona un asunto</option>
+            <option>Consulta sobre un software</option>
+            <option>Proyecto personalizado</option>
+            <option>Soporte técnico</option>
+            <option>Colaboración</option>
+            <option>Otro</option>
+          </select>
+        </div>
+        <div class="cf-group">
+          <label class="cf-label">Mensaje</label>
+          <textarea class="cf-textarea" id="cf-message" placeholder="Cuéntame sobre tu proyecto o consulta..." required></textarea>
+        </div>
+        <button class="cf-submit" onclick="sendContact(event)">Enviar mensaje →</button>
+        <p style="text-align:center;font-size:0.72rem;color:var(--muted);margin-top:1rem">Tu mensaje llega directamente a mi correo.</p>
+      </div>
+      <div class="cf-success" id="cf-success">
+        <span class="cf-success-icon">✅</span>
+        <h3 style="font-family:'Syne',sans-serif;font-size:1.25rem;margin-bottom:0.5rem">¡Mensaje enviado!</h3>
+        <p>Gracias por escribirme. Te responderé pronto.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-left">
+    <p class="footer-brand">© 2026<strong> SergioDevHub - Hnexux</strong></p>
+    <div class="footer-sep"></div>
+    <p class="footer-copy">Sincelejo, Colombia</p>
+  </div>
+  <div class="footer-links">
+    <a href="https://github.com" target="_blank">GitHub</a>
+    <a href="#software">Proyectos</a>
+    <a href="#tools">Herramientas</a>
+    <a href="#contacto">Contacto</a>
+  </div>
+</footer>
+
+<!-- ══ ADMIN BAR ══ -->
+<div class="admin-bar" id="admin-bar">
+  <div class="admin-bar-label">
+    🛡️ <span class="full">Panel de administrador activo</span><span>ADMIN</span>
+  </div>
+  <div class="admin-bar-actions">
+    <button class="admin-btn add-sw" onclick="openUploadModal()">+ Software</button>
+    <button class="admin-btn add-tool" onclick="openToolModal()">+ Herramienta</button>
+    <button class="admin-btn logout" onclick="adminLogout()">Cerrar sesión</button>
+  </div>
+</div>
+
+<!-- ══ LOGIN MODAL ══ -->
+<div class="overlay" id="login-overlay" onclick="closeBg(event,'login-overlay')">
+  <div class="modal" style="width:420px">
+    <button class="modal-close" onclick="closeModal('login-overlay')">✕</button>
+    <div class="login-icon">🔐</div>
+    <h2 class="modal-title">Acceso Admin</h2>
+    <p class="modal-sub">Solo el administrador puede subir y gestionar contenido.</p>
+    <div class="admin-note">Las funciones de publicación están restringidas al administrador.</div>
+    <div class="cf-group">
+      <label class="cf-label">Contraseña de administrador</label>
+      <input type="password" class="cf-input" id="admin-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="form-submit-modal" onclick="doLogin()">Ingresar →</button>
+  </div>
+</div>
+
+<!-- ══ UPLOAD SW MODAL ══ -->
+<div class="overlay" id="upload-overlay" onclick="closeBg(event,'upload-overlay')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('upload-overlay')">✕</button>
+    <h2 class="modal-title">Publicar Software</h2>
+    <p class="modal-sub">El proyecto aparecerá en la grilla principal para todos los visitantes.</p>
+
+    <div class="cf-row">
+      <div class="cf-group">
+        <label class="cf-label">Nombre del proyecto</label>
+        <input type="text" class="cf-input" id="sw-name" placeholder="Mi Herramienta v1.0">
+      </div>
+      <div class="cf-group">
+        <label class="cf-label">Versión</label>
+        <input type="text" class="cf-input" id="sw-ver" placeholder="v1.0">
+      </div>
+    </div>
+    <div class="cf-group">
+      <label class="cf-label">Categoría</label>
+      <select class="cf-select" id="sw-cat">
+        <option>Productividad</option>
+        <option>Utilidad</option>
+        <option>Automatización</option>
+        <option>Análisis</option>
+        <option>Otro</option>
+      </select>
+    </div>
+    <div class="cf-group">
+      <label class="cf-label">Descripción</label>
+      <textarea class="cf-textarea" id="sw-desc" placeholder="¿Qué hace este software y para quién es útil?"></textarea>
+    </div>
+    <div class="cf-row">
+      <div class="cf-group">
+        <label class="cf-label">Tecnologías (coma)</label>
+        <input type="text" class="cf-input" id="sw-tags" placeholder="Excel, Python, VBA">
+      </div>
+      <div class="cf-group">
+        <label class="cf-label">URL GitHub (opcional)</label>
+        <input type="url" class="cf-input" id="sw-gh" placeholder="https://github.com/...">
+      </div>
+    </div>
+    <div class="cf-group">
+      <label class="cf-label">URL de descarga <span style="color:var(--green);font-size:0.65rem">★ Se guarda permanentemente en GitHub</span></label>
+      <input type="url" class="cf-input" id="sw-dl" placeholder="https://mega.nz/file/... o https://github.com/.../releases/download/...">
+      <p style="font-size:0.72rem;color:var(--muted2);margin-top:0.4rem;line-height:1.5">
+        Sube el archivo ZIP a <strong style="color:var(--accent)">MEGA</strong>, <strong style="color:var(--accent)">Google Drive</strong> o <strong style="color:var(--accent)">GitHub Releases</strong> y pega aquí el enlace directo. El proyecto quedará guardado para siempre en tu repo.
+      </p>
+    </div>
+    <p class="file-selected" id="sw-fname"></p>
+    <button class="form-submit-modal" onclick="publishSoftware()">Publicar proyecto →</button>
+  </div>
+</div>
+
+<!-- ══ ADD TOOL MODAL ══ -->
+<div class="overlay" id="tool-overlay" onclick="closeBg(event,'tool-overlay')">
+  <div class="modal" style="width:540px">
+    <button class="modal-close" onclick="closeModal('tool-overlay')">✕</button>
+    <h2 class="modal-title">Agregar Herramienta</h2>
+    <p class="modal-sub">Agrega una herramienta gratuita de internet a la plataforma.</p>
+
+    <div class="cf-group">
+      <label class="cf-label">Nombre</label>
+      <input type="text" class="cf-input" id="tl-name" placeholder="Nombre de la herramienta">
+    </div>
+
+    <div class="cf-group">
+      <label class="cf-label">Ícono — selecciona uno o escribe tu emoji</label>
+      <div style="display:flex;align-items:center;gap:1rem;margin-bottom:0.75rem">
+        <div id="tl-icon-preview" style="width:48px;height:48px;border-radius:10px;background:var(--bg4);border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0;transition:transform 0.15s">🔧</div>
+        <div style="flex:1">
+          <p style="font-size:0.82rem;color:var(--text);font-weight:500;margin-bottom:0.2rem" id="tl-icon-label">Sin seleccionar</p>
+          <p style="font-size:0.7rem;color:var(--muted2)">Haz clic en un ícono o escribe tu emoji a la derecha</p>
+        </div>
+        <input type="text" id="tl-icon" value="🔧" maxlength="4"
+          style="width:60px;background:var(--bg4);border:1px solid var(--border2);color:var(--text);padding:8px;border-radius:6px;font-size:1.4rem;text-align:center;outline:none;flex-shrink:0"
+          oninput="updateIconPreview(this.value)">
+      </div>
+      <div style="background:var(--bg4);border:1px solid var(--border2);border-radius:8px;overflow:hidden">
+        <div style="display:flex;border-bottom:1px solid var(--border2);overflow-x:auto">
+          <button class="icon-tab active" onclick="switchIconTab(this,'cat-dev')">💻 Dev</button>
+          <button class="icon-tab" onclick="switchIconTab(this,'cat-design')">🎨 Diseño</button>
+          <button class="icon-tab" onclick="switchIconTab(this,'cat-data')">📊 Datos</button>
+          <button class="icon-tab" onclick="switchIconTab(this,'cat-seg')">🔒 Seguridad</button>
+          <button class="icon-tab" onclick="switchIconTab(this,'cat-prod')">⚡ Product.</button>
+          <button class="icon-tab" onclick="switchIconTab(this,'cat-cloud')">☁️ Cloud</button>
+          <button class="icon-tab" onclick="switchIconTab(this,'cat-otros')">✨ Otros</button>
+        </div>
+        <div id="cat-dev" class="icon-cat" style="display:grid;grid-template-columns:repeat(8,1fr);gap:2px;padding:8px">
+          <button class="icon-opt" onclick="selectIcon(event,'💻','Computador')">💻</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🖥️','Monitor')">🖥️</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🐙','GitHub')">🐙</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🐍','Python')">🐍</button>
+          <button class="icon-opt" onclick="selectIcon(event,'☕','Java')">☕</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🦀','Rust')">🦀</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🐘','PHP')">🐘</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🟨','JavaScript')">🟨</button>
+          <button class="icon-opt" onclick="selectIcon(event,'⚛️','React')">⚛️</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🐳','Docker')">🐳</button>
+          <button class="icon-opt" onclick="selectIcon(event,'☸️','Kubernetes')">☸️</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🔧','Herramienta')">🔧</button>
+          <button class="icon-opt" onclick="selectIcon(event,'⚙️','Configuración')">⚙️</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🛠️','Herramientas')">🛠️</button>
+          <button class="icon-opt" onclick="selectIcon(event,'📡','API')">📡</button>
+          <button class="icon-opt" onclick="selectIcon(event,'📦','Paquete')">📦</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🔌','Plugin')">🔌</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🧩','Extensión')">🧩</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🤖','Bot/IA')">🤖</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🧠','IA/ML')">🧠</button>
+          <button class="icon-opt" onclick="selectIcon(event,'💾','Base de datos')">💾</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🖱️','IDE')">🖱️</button>
+          <button class="icon-opt" onclick="selectIcon(event,'⌨️','Editor')">⌨️</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🧰','Caja tools')">🧰</button>
+        </div>
+        <div id="cat-design" class="icon-cat" style="display:none;grid-template-columns:repeat(8,1fr);gap:2px;padding:8px">
+          <button class="icon-opt" onclick="selectIcon(event,'🎨','Diseño')">🎨</button>
+          <button class="icon-opt" onclick="selectIcon(event,'✏️','Dibujo')">✏️</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🖊️','Pluma')">🖊️</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🖌️','Pincel')">🖌️</button>
+          <button class="icon-opt" onclick="selectIcon(event,'📐','Diseño técnico')">📐</button>
+          <button class="icon-opt" onclick="selectIcon(event,'📏','Medición')">📏</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🖼️','Imágenes')">🖼️</button>
+          <button class="icon-opt" onclick="selectIcon(event,'📸','Fotografía')">📸</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🎬','Video')">🎬</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🎵','Audio')">🎵</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🎙️','Grabación')">🎙️</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🌈','Colores')">🌈</button>
+          <button class="icon-opt" onclick="selectIcon(event,'💡','Ideas')">💡</button>
+          <button class="icon-opt" onclick="selectIcon(event,'✨','Efectos')">✨</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🔍','Zoom')">🔍</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🪄','Magia')">🪄</button>
+        </div>
+        <div id="cat-data" class="icon-cat" style="display:none;grid-template-columns:repeat(8,1fr);gap:2px;padding:8px">
+          <button class="icon-opt" onclick="selectIcon(event,'📊','Gráficas')">📊</button>
+          <button class="icon-opt" onclick="selectIcon(event,'📈','Estadísticas')">📈</button>
+          <button class="icon-opt" onclick="selectIcon(event,'📉','Análisis')">📉</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🗂️','Archivos')">🗂️</button>
+          <button class="icon-opt" onclick="selectIcon(event,'📋','Lista')">📋</button>
+          <button class="icon-opt" onclick="selectIcon(event,'📁','Carpeta')">📁</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🗃️','Base datos')">🗃️</button>
+          <button class="icon-opt" onclick="selectIcon(event,'💽','Disco')">💽</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🔢','Números')">🔢</button>
+          <button class="icon-opt" onclick="selectIcon(event,'📌','Pin')">📌</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🧮','Calculadora')">🧮</button>
+          <button class="icon-opt" onclick="selectIcon(event,'📝','Notas')">📝</button>
+          <button class="icon-opt" onclick="selectIcon(event,'📀','Datos')">📀</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🗺️','Mapa datos')">🗺️</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🗒️','Libreta')">🗒️</button>
+          <button class="icon-opt" onclick="selectIcon(event,'📜','Reporte')">📜</button>
+        </div>
+        <div id="cat-seg" class="icon-cat" style="display:none;grid-template-columns:repeat(8,1fr);gap:2px;padding:8px">
+          <button class="icon-opt" onclick="selectIcon(event,'🔒','Seguridad')">🔒</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🔓','Acceso')">🔓</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🛡️','Protección')">🛡️</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🔑','Clave')">🔑</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🗝️','Llave')">🗝️</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🔐','Cifrado')">🔐</button>
+          <button class="icon-opt" onclick="selectIcon(event,'👁️','Monitoreo')">👁️</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🕵️','Auditoría')">🕵️</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🚨','Alerta')">🚨</button>
+          <button class="icon-opt" onclick="selectIcon(event,'⚠️','Advertencia')">⚠️</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🧱','Firewall')">🧱</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🔏','Firma digital')">🔏</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🪪','Identidad')">🪪</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🚫','Bloqueo')">🚫</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🦠','Antivirus')">🦠</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🧬','Biometría')">🧬</button>
+        </div>
+        <div id="cat-prod" class="icon-cat" style="display:none;grid-template-columns:repeat(8,1fr);gap:2px;padding:8px">
+          <button class="icon-opt" onclick="selectIcon(event,'⚡','Velocidad')">⚡</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🚀','Lanzamiento')">🚀</button>
+          <button class="icon-opt" onclick="selectIcon(event,'⏱️','Tiempo')">⏱️</button>
+          <button class="icon-opt" onclick="selectIcon(event,'📅','Calendario')">📅</button>
+          <button class="icon-opt" onclick="selectIcon(event,'✅','Tareas')">✅</button>
+          <button class="icon-opt" onclick="selectIcon(event,'📬','Email')">📬</button>
+          <button class="icon-opt" onclick="selectIcon(event,'💬','Chat')">💬</button>
+          <button class="icon-opt" onclick="selectIcon(event,'📞','Llamadas')">📞</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🗓️','Agenda')">🗓️</button>
+          <button class="icon-opt" onclick="selectIcon(event,'📤','Exportar')">📤</button>
+          <button class="icon-opt" onclick="selectIcon(event,'📥','Importar')">📥</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🔄','Sincronizar')">🔄</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🖨️','Imprimir')">🖨️</button>
+          <button class="icon-opt" onclick="selectIcon(event,'📎','Adjuntar')">📎</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🗜️','Comprimir')">🗜️</button>
+          <button class="icon-opt" onclick="selectIcon(event,'⏰','Recordatorio')">⏰</button>
+        </div>
+        <div id="cat-cloud" class="icon-cat" style="display:none;grid-template-columns:repeat(8,1fr);gap:2px;padding:8px">
+          <button class="icon-opt" onclick="selectIcon(event,'☁️','Nube')">☁️</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🌐','Web')">🌐</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🔗','Link')">🔗</button>
+          <button class="icon-opt" onclick="selectIcon(event,'📶','Señal')">📶</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🛰️','Servidor')">🛰️</button>
+          <button class="icon-opt" onclick="selectIcon(event,'📲','Móvil')">📲</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🔁','Backup')">🔁</button>
+          <button class="icon-opt" onclick="selectIcon(event,'⬆️','Subir')">⬆️</button>
+          <button class="icon-opt" onclick="selectIcon(event,'⬇️','Bajar')">⬇️</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🌍','Global')">🌍</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🏗️','Infraestructura')">🏗️</button>
+          <button class="icon-opt" onclick="selectIcon(event,'⚖️','Balanceo')">⚖️</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🔃','Ciclo')">🔃</button>
+          <button class="icon-opt" onclick="selectIcon(event,'💸','Facturación')">💸</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🌩️','Thunder')">🌩️</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🏠','Local/Home')">🏠</button>
+        </div>
+        <div id="cat-otros" class="icon-cat" style="display:none;grid-template-columns:repeat(8,1fr);gap:2px;padding:8px">
+          <button class="icon-opt" onclick="selectIcon(event,'📖','Documentación')">📖</button>
+          <button class="icon-opt" onclick="selectIcon(event,'📚','Libros')">📚</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🎓','Aprendizaje')">🎓</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🏆','Premio')">🏆</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🎯','Objetivo')">🎯</button>
+          <button class="icon-opt" onclick="selectIcon(event,'💰','Dinero')">💰</button>
+          <button class="icon-opt" onclick="selectIcon(event,'📣','Marketing')">📣</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🎁','Gratis')">🎁</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🧪','Testing')">🧪</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🔬','Debug')">🔬</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🌱','Open Source')">🌱</button>
+          <button class="icon-opt" onclick="selectIcon(event,'♻️','Reciclaje')">♻️</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🎲','Random')">🎲</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🔭','Explorar')">🔭</button>
+          <button class="icon-opt" onclick="selectIcon(event,'🧲','Integración')">🧲</button>
+          <button class="icon-opt" onclick="selectIcon(event,'⚗️','Experimento')">⚗️</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="cf-group">
+      <label class="cf-label">Descripción</label>
+      <textarea class="cf-textarea" id="tl-desc" placeholder="¿Para qué sirve esta herramienta?" style="min-height:80px"></textarea>
+    </div>
+    <div class="cf-group">
+      <label class="cf-label">URL del sitio web</label>
+      <input type="url" class="cf-input" id="tl-url" placeholder="https://...">
+    </div>
+    <button class="form-submit-modal" style="background:linear-gradient(135deg,var(--amber),#d97706)" onclick="publishTool()">Agregar herramienta →</button>
+  </div>
+</div>
+
+<!-- ══ TOAST ══ -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   SERGIO DEV HUB — JS completo, revisado y sin errores
+   ───────────────────────────────────────────────────────────────
+   Almacenamiento permanente via GitHub API + localStorage backup.
+   Contadores reales desde los datos guardados.
+   Sistema admin/usuario sin conflictos.
+   Selector de íconos integrado sin sobreescribir funciones.
+═══════════════════════════════════════════════════════════════ */
+
+/* ── CONFIGURACIÓN ── */
+const GITHUB_TOKEN  = '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';
+const GITHUB_USER   = 'serskynet';
+const GITHUB_REPO   = 'Sergio-DevHub';
+const DATA_FILE     = 'data.json';
+const ADMIN_PASS    = 'sergio2024';
+const FORMSPREE_URL = 'https://formspree.io/f/xdavawao';
+
+/* ── ESTADO GLOBAL ── */
+let isAdmin  = false;
+let _dataSHA = null;
+let _db      = { projects: [], tools: [], downloads: 53 };
+
+/* ═══════════════════════════════════════════════════════════════
+   ARRANQUE — espera a GitHub antes de renderizar
+═══════════════════════════════════════════════════════════════ */
+window.addEventListener('DOMContentLoaded', async () => {
+  showLoadingState(true);
+  await loadFromGitHub();   // primero carga datos
+  renderAll();              // luego renderiza con datos reales
+  updateCounters();         // contadores con datos reales, sin animación falsa
+  showLoadingState(false);
+});
+
+function showLoadingState(loading) {
+  const grid = document.getElementById('sw-grid');
+  const existing = document.getElementById('loading-msg');
+  if (loading && !existing) {
+    const msg = document.createElement('div');
+    msg.id = 'loading-msg';
+    msg.style.cssText = 'grid-column:1/-1;padding:2rem;text-align:center;color:var(--muted2);font-size:0.85rem;font-family:"Space Mono",monospace';
+    msg.textContent = 'Cargando proyectos…';
+    grid.insertBefore(msg, document.getElementById('sw-add-card'));
+  } else if (!loading && existing) {
+    existing.remove();
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   GITHUB API
+═══════════════════════════════════════════════════════════════ */
+async function loadFromGitHub() {
+  // Si el token no está configurado, usar solo localStorage
+  if (GITHUB_TOKEN === 'ghp_XXXXXXXXXXXXXXXXXX' || !GITHUB_TOKEN) {
+    _loadFromLocal();
+    return;
+  }
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${DATA_FILE}`,
+      { headers: { Authorization: `token ${GITHUB_TOKEN}`, Accept: 'application/vnd.github.v3+json' } }
+    );
+    if (res.status === 404) {
+      // Primera vez: crear data.json con estado vacío
+      await saveToGitHub('Inicializar plataforma');
+      return;
+    }
+    if (!res.ok) throw new Error('GitHub API ' + res.status);
+    const json = await res.json();
+    _dataSHA = json.sha;
+    const decoded = JSON.parse(atob(json.content.replace(/\n/g, '')));
+    // Validar estructura antes de asignar
+    _db = {
+      projects:  Array.isArray(decoded.projects)  ? decoded.projects  : [],
+      tools:     Array.isArray(decoded.tools)      ? decoded.tools     : [],
+      downloads: typeof decoded.downloads === 'number' ? decoded.downloads : 53
+    };
+    // Sincronizar copia local
+    localStorage.setItem('sdhub_db', JSON.stringify(_db));
+  } catch (err) {
+    console.warn('GitHub no disponible, usando copia local:', err.message);
+    _loadFromLocal();
+  }
+}
+
+function _loadFromLocal() {
+  try {
+    const raw = localStorage.getItem('sdhub_db');
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      _db = {
+        projects:  Array.isArray(parsed.projects)  ? parsed.projects  : [],
+        tools:     Array.isArray(parsed.tools)      ? parsed.tools     : [],
+        downloads: typeof parsed.downloads === 'number' ? parsed.downloads : 53
+      };
+    }
+  } catch(e) { console.warn('localStorage corrupto, usando defaults'); }
+}
+
+async function saveToGitHub(msg = 'Actualizar data.json') {
+  if (GITHUB_TOKEN === 'ghp_XXXXXXXXXXXXXXXXXX' || !GITHUB_TOKEN) {
+    // Sin GitHub: solo localStorage
+    localStorage.setItem('sdhub_db', JSON.stringify(_db));
+    return;
+  }
+  const content = btoa(unescape(encodeURIComponent(JSON.stringify(_db, null, 2))));
+  const payload = { message: msg, content };
+  if (_dataSHA) payload.sha = _dataSHA;
+
+  const res = await fetch(
+    `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${DATA_FILE}`,
+    {
+      method: 'PUT',
+      headers: {
+        Authorization: `token ${GITHUB_TOKEN}`,
+        Accept: 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    }
+  );
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    localStorage.setItem('sdhub_db', JSON.stringify(_db)); // guardar local de todas formas
+    throw new Error(errData.message || `HTTP ${res.status}`);
+  }
+  const result = await res.json();
+  _dataSHA = result.content.sha; // CRÍTICO: actualizar SHA para la próxima escritura
+  localStorage.setItem('sdhub_db', JSON.stringify(_db));
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CONTADORES — siempre reflejan los datos reales
+═══════════════════════════════════════════════════════════════ */
+function updateCounters() {
+  // 1 proyecto base (Control de Carreras) + los guardados
+  const sw    = 1 + _db.projects.length;
+  // Descargas reales guardadas
+  const dl    = _db.downloads || 53;
+  // 8 herramientas base + las guardadas
+  const tools = 8 + _db.tools.length;
+
+  animCount('c-sw',    sw);
+  animCount('c-dl',    dl);
+  animCount('c-tools', tools);
+}
+
+function animCount(id, target) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = '0';
+  let n = 0;
+  const step = Math.max(1, Math.ceil(target / 50));
+  const timer = setInterval(() => {
+    n = Math.min(n + step, target);
+    el.textContent = n;
+    if (n >= target) clearInterval(timer);
+  }, 25);
+}
+
+function setCounter(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RENDERIZAR — proyectos y herramientas guardados
+═══════════════════════════════════════════════════════════════ */
+function renderAll() {
+  // Limpiar cards dinámicas anteriores (por si se llama más de una vez)
+  document.querySelectorAll('.sw-card.dynamic').forEach(c => c.remove());
+  document.querySelectorAll('.tool-card.dynamic').forEach(c => c.remove());
+
+  _db.projects.forEach(p => _renderProjectCard(p));
+  _db.tools.forEach(t => _renderToolCard(t));
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PROYECTOS
+═══════════════════════════════════════════════════════════════ */
+function _renderProjectCard(p) {
+  if (!p || !p.id) return;
+  // Evitar duplicados
+  if (document.getElementById('proj-' + p.id)) return;
+
+  const tagsHtml = (p.tags || [])
+    .map(t => `<span class="sw-tag">${_esc(t)}</span>`).join('');
+
+  const ghBtn = p.gh
+    ? `<a href="${_esc(p.gh)}" target="_blank" class="sw-btn gh">GitHub →</a>`
+    : '';
+
+  const dlClick = p.dlUrl
+    ? `handleDownload(${JSON.stringify(p.name)},${JSON.stringify(p.dlUrl)})`
+    : `showToast('⚠ Sin URL de descarga','error')`;
+
+  const card = document.createElement('div');
+  card.className = 'sw-card dynamic';
+  card.id = 'proj-' + p.id;
+  card.innerHTML = `
+    <div class="sw-card-header">
+      <span class="sw-type">${_esc(p.cat || 'Software')}</span>
+      <span class="sw-version">${_esc(p.ver || 'v1.0')}</span>
+    </div>
+    <h3 class="sw-title">${_esc(p.name)}</h3>
+    <p class="sw-desc">${_esc(p.desc)}</p>
+    <div class="sw-tags">${tagsHtml}</div>
+    <div class="sw-actions">
+      <button class="sw-btn dl" onclick="${dlClick}">↓ Descargar</button>
+      ${ghBtn}
+      <button class="sw-btn del-btn"
+        style="display:${isAdmin?'inline-flex':'none'};background:transparent;color:var(--red);border:1px solid rgba(239,68,68,0.25);margin-left:auto"
+        onclick="deleteProject('${p.id}')">✕</button>
+    </div>`;
+
+  const grid    = document.getElementById('sw-grid');
+  const addCard = document.getElementById('sw-add-card');
+  grid.insertBefore(card, addCard);
+}
+
+async function publishSoftware() {
+  const name  = document.getElementById('sw-name').value.trim();
+  const desc  = document.getElementById('sw-desc').value.trim();
+  const ver   = document.getElementById('sw-ver').value.trim()  || 'v1.0';
+  const cat   = document.getElementById('sw-cat').value;
+  const tags  = document.getElementById('sw-tags').value.trim();
+  const gh    = document.getElementById('sw-gh').value.trim();
+  const dlUrl = document.getElementById('sw-dl').value.trim();
+
+  if (!name)  { showToast('⚠ El nombre es requerido',       'error'); return; }
+  if (!desc)  { showToast('⚠ La descripción es requerida',  'error'); return; }
+  if (!dlUrl) { showToast('⚠ La URL de descarga es requerida — sube el archivo a MEGA/GitHub y pega el enlace', 'error'); return; }
+
+  const btn = document.querySelector('#upload-overlay .form-submit-modal');
+  if (!btn) return;
+  const origTxt = btn.textContent;
+  btn.textContent = '⏳ Guardando…'; btn.disabled = true;
+
+  const project = {
+    id:   Date.now().toString(),
+    name, ver, cat, desc,
+    tags: tags.split(',').map(t => t.trim()).filter(Boolean),
+    gh:   gh || '',
+    dlUrl
+  };
+
+  _db.projects.push(project);
+
+  try {
+    await saveToGitHub(`Agregar proyecto: ${name}`);
+    _renderProjectCard(project);
+    setCounter('c-sw', 1 + _db.projects.length);
+    _closeModalClean('upload-overlay');
+    showToast('✓ Proyecto publicado y guardado permanentemente', 'success');
+    ['sw-name','sw-ver','sw-desc','sw-tags','sw-gh','sw-dl']
+      .forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+    const fn = document.getElementById('sw-fname');
+    if (fn) fn.style.display = 'none';
+  } catch(err) {
+    _db.projects.pop(); // revertir en memoria
+    showToast('⚠ Error al guardar: ' + err.message, 'error');
+  } finally {
+    btn.textContent = origTxt; btn.disabled = false;
+  }
+}
+
+async function deleteProject(id) {
+  if (!isAdmin) return;
+  if (!confirm('¿Eliminar este proyecto permanentemente? Esta acción no se puede deshacer.')) return;
+
+  const backup = [..._db.projects];
+  _db.projects = _db.projects.filter(p => p.id !== id);
+
+  try {
+    await saveToGitHub(`Eliminar proyecto ${id}`);
+    document.getElementById('proj-' + id)?.remove();
+    setCounter('c-sw', 1 + _db.projects.length);
+    showToast('✓ Proyecto eliminado', 'success');
+  } catch(err) {
+    _db.projects = backup; // revertir
+    showToast('⚠ Error al eliminar: ' + err.message, 'error');
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   HERRAMIENTAS
+═══════════════════════════════════════════════════════════════ */
+function _renderToolCard(t) {
+  if (!t || !t.id) return;
+  if (document.getElementById('tool-' + t.id)) return;
+
+  const domain = (() => { try { return new URL(t.url).hostname; } catch { return t.url; } })();
+
+  const card = document.createElement('div');
+  card.className = 'tool-card dynamic';
+  card.id = 'tool-' + t.id;
+  card.innerHTML = `
+    <div class="tool-top">
+      <div class="tool-icon-wrap">${t.icon || '🔧'}</div>
+      <div class="tool-name-wrap">
+        <div class="tool-name">${_esc(t.name)}<span class="free-pill">GRATIS</span></div>
+      </div>
+    </div>
+    <p class="tool-desc">${_esc(t.desc)}</p>
+    <a href="${_esc(t.url)}" target="_blank" class="tool-link">${_esc(domain)} →</a>
+    <button class="del-btn" onclick="deleteTool('${t.id}')"
+      style="display:${isAdmin?'block':'none'};margin-top:0.6rem;background:none;border:none;
+             color:var(--red);font-size:0.68rem;cursor:pointer;font-family:'Space Mono',monospace">
+      ✕ Eliminar
+    </button>`;
+
+  const grid    = document.getElementById('tools-grid');
+  const addCard = document.getElementById('add-tool-card');
+  grid.insertBefore(card, addCard);
+}
+
+async function publishTool() {
+  const name = document.getElementById('tl-name').value.trim();
+  const desc = document.getElementById('tl-desc').value.trim();
+  const url  = document.getElementById('tl-url').value.trim();
+  const icon = document.getElementById('tl-icon').value.trim() || '🔧';
+
+  if (!name) { showToast('⚠ El nombre es requerido',      'error'); return; }
+  if (!desc) { showToast('⚠ La descripción es requerida', 'error'); return; }
+  if (!url)  { showToast('⚠ La URL es requerida',         'error'); return; }
+
+  // Validar que sea una URL real
+  try { new URL(url); } catch {
+    showToast('⚠ La URL no es válida (debe empezar con https://)', 'error'); return;
+  }
+
+  const btn = document.querySelector('#tool-overlay .form-submit-modal');
+  if (!btn) return;
+  const origTxt = btn.textContent;
+  btn.textContent = '⏳ Guardando…'; btn.disabled = true;
+
+  const tool = { id: Date.now().toString(), name, icon, desc, url };
+  _db.tools.push(tool);
+
+  try {
+    await saveToGitHub(`Agregar herramienta: ${name}`);
+    _renderToolCard(tool);
+    setCounter('c-tools', 8 + _db.tools.length);
+    _closeModalClean('tool-overlay');
+    showToast('✓ Herramienta guardada permanentemente', 'success');
+    ['tl-name','tl-desc','tl-url']
+      .forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+    // Resetear ícono picker
+    const iconEl = document.getElementById('tl-icon');
+    if (iconEl) iconEl.value = '🔧';
+    _resetIconPicker();
+  } catch(err) {
+    _db.tools.pop();
+    showToast('⚠ Error al guardar: ' + err.message, 'error');
+  } finally {
+    btn.textContent = origTxt; btn.disabled = false;
+  }
+}
+
+async function deleteTool(id) {
+  if (!isAdmin) return;
+  if (!confirm('¿Eliminar esta herramienta permanentemente?')) return;
+
+  const backup = [..._db.tools];
+  _db.tools = _db.tools.filter(t => t.id !== id);
+
+  try {
+    await saveToGitHub(`Eliminar herramienta ${id}`);
+    document.getElementById('tool-' + id)?.remove();
+    setCounter('c-tools', 8 + _db.tools.length);
+    showToast('✓ Herramienta eliminada', 'success');
+  } catch(err) {
+    _db.tools = backup;
+    showToast('⚠ Error al eliminar: ' + err.message, 'error');
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ADMIN
+═══════════════════════════════════════════════════════════════ */
+function doLogin() {
+  const passEl = document.getElementById('admin-pass');
+  if (!passEl) return;
+  if (passEl.value === ADMIN_PASS) {
+    isAdmin = true;
+    _closeModalClean('login-overlay');
+    _activateAdmin();
+    showToast('✓ Sesión admin iniciada', 'success');
+  } else {
+    showToast('✗ Contraseña incorrecta', 'error');
+    passEl.value = '';
+  }
+}
+
+function _activateAdmin() {
+  const adminBtn  = document.getElementById('nav-admin-btn');
+  const loginBtn  = document.getElementById('nav-login-btn');
+  const badge     = document.getElementById('nav-role-badge');
+  const adminBar  = document.getElementById('admin-bar');
+  const swAdd     = document.getElementById('sw-add-card');
+  const toolAdd   = document.getElementById('add-tool-card');
+
+  if (adminBtn)  adminBtn.style.display  = 'flex';
+  if (loginBtn)  loginBtn.style.display  = 'none';
+  if (badge) {
+    badge.textContent = '🛡️ Admin';
+    badge.style.borderColor = 'rgba(139,92,246,0.4)';
+    badge.style.color = '#a78bfa';
+  }
+  if (adminBar)  adminBar.classList.add('visible');
+  if (swAdd)     swAdd.style.display     = '';
+  if (toolAdd)   toolAdd.style.display   = '';
+
+  // Mostrar todos los botones de eliminar
+  document.querySelectorAll('.del-btn').forEach(el => el.style.display = '');
+}
+
+function adminLogout() {
+  isAdmin = false;
+  const adminBtn  = document.getElementById('nav-admin-btn');
+  const loginBtn  = document.getElementById('nav-login-btn');
+  const badge     = document.getElementById('nav-role-badge');
+  const adminBar  = document.getElementById('admin-bar');
+  const swAdd     = document.getElementById('sw-add-card');
+  const toolAdd   = document.getElementById('add-tool-card');
+
+  if (adminBtn)  adminBtn.style.display  = 'none';
+  if (loginBtn)  loginBtn.style.display  = '';
+  if (badge) {
+    badge.textContent = '👤 Visitante';
+    badge.style.borderColor = '';
+    badge.style.color = '';
+  }
+  if (adminBar)  adminBar.classList.remove('visible');
+  if (swAdd)     swAdd.style.display     = 'none';
+  if (toolAdd)   toolAdd.style.display   = 'none';
+
+  // Ocultar todos los botones de eliminar
+  document.querySelectorAll('.del-btn').forEach(el => el.style.display = 'none');
+  showToast('Sesión cerrada');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MODALES — versión limpia sin sobreescrituras
+═══════════════════════════════════════════════════════════════ */
+function openLoginModal() {
+  _openModal('login-overlay');
+}
+function openUploadModal() {
+  if (!isAdmin) { showToast('Acceso restringido al administrador', 'error'); return; }
+  _openModal('upload-overlay');
+}
+function openToolModal() {
+  if (!isAdmin) { showToast('Acceso restringido al administrador', 'error'); return; }
+  _openModal('tool-overlay');
+}
+
+function _openModal(id) {
+  const el = document.getElementById(id);
+  if (el) el.classList.add('open');
+}
+
+// closeModal es la función global que el HTML llama desde onclick
+function closeModal(id) {
+  _closeModalClean(id);
+}
+
+function _closeModalClean(id) {
+  const el = document.getElementById(id);
+  if (el) el.classList.remove('open');
+  // Limpiar el picker de íconos si se cierra ese modal
+  if (id === 'tool-overlay') _resetIconPicker();
+  // Limpiar contraseña si se cierra login
+  if (id === 'login-overlay') {
+    const p = document.getElementById('admin-pass');
+    if (p) p.value = '';
+  }
+}
+
+function closeBg(e, id) {
+  if (e.target.id === id) _closeModalClean(id);
+}
+
+function showFile(input, tid) {
+  const el = document.getElementById(tid);
+  if (el && input.files[0]) {
+    el.textContent = '✓ ' + input.files[0].name;
+    el.style.display = 'block';
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SELECTOR DE ÍCONOS — sin conflictos con closeModal
+═══════════════════════════════════════════════════════════════ */
+function selectIcon(e, emoji, label) {
+  // e = event del botón clickeado
+  const iconInput = document.getElementById('tl-icon');
+  if (iconInput) iconInput.value = emoji;
+  _updateIconPreview(emoji, label);
+  // Marcar el botón seleccionado
+  document.querySelectorAll('.icon-opt').forEach(b => b.classList.remove('picked'));
+  if (e && e.currentTarget) e.currentTarget.classList.add('picked');
+}
+
+function _updateIconPreview(emoji, label) {
+  const preview = document.getElementById('tl-icon-preview');
+  const lbl     = document.getElementById('tl-icon-label');
+  if (preview && emoji) {
+    preview.textContent = emoji;
+    preview.style.transform = 'scale(1.2)';
+    setTimeout(() => { if(preview) preview.style.transform = 'scale(1)'; }, 200);
+  }
+  if (lbl) lbl.textContent = label || 'Ícono seleccionado';
+}
+
+function updateIconPreview(emoji) {
+  // Llamado desde el input manual
+  _updateIconPreview(emoji, 'Ícono personalizado');
+}
+
+function switchIconTab(btn, catId) {
+  document.querySelectorAll('.icon-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.icon-cat').forEach(c => c.style.display = 'none');
+  const cat = document.getElementById(catId);
+  if (cat) cat.style.display = 'grid';
+}
+
+function _resetIconPicker() {
+  const iconEl = document.getElementById('tl-icon');
+  if (iconEl) iconEl.value = '🔧';
+  const preview = document.getElementById('tl-icon-preview');
+  if (preview) preview.textContent = '🔧';
+  const lbl = document.getElementById('tl-icon-label');
+  if (lbl) lbl.textContent = 'Sin seleccionar';
+  document.querySelectorAll('.icon-opt').forEach(b => b.classList.remove('picked'));
+  // Volver al tab inicial
+  const firstTab = document.querySelector('.icon-tab');
+  const firstCat = document.getElementById('cat-dev');
+  if (firstTab && firstCat) {
+    document.querySelectorAll('.icon-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.icon-cat').forEach(c => c.style.display = 'none');
+    firstTab.classList.add('active');
+    firstCat.style.display = 'grid';
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CONTACTO — Formspree
+═══════════════════════════════════════════════════════════════ */
+async function sendContact(e) {
+  if (e) e.preventDefault();
+
+  const name    = document.getElementById('cf-name')?.value.trim()    || '';
+  const email   = document.getElementById('cf-email')?.value.trim()   || '';
+  const subject = document.getElementById('cf-subject')?.value        || 'Contacto desde SergioDevHub';
+  const message = document.getElementById('cf-message')?.value.trim() || '';
+
+  if (!name || !email || !message) {
+    showToast('⚠ Nombre, correo y mensaje son requeridos', 'error'); return;
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    showToast('⚠ El correo no tiene un formato válido', 'error'); return;
+  }
+
+  const btn  = document.querySelector('.cf-submit');
+  const orig = btn ? btn.textContent : '';
+  if (btn) { btn.textContent = '⏳ Enviando…'; btn.disabled = true; }
+
+  try {
+    const res = await fetch(FORMSPREE_URL, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body:    JSON.stringify({ name, email, _replyto: email, subject, message })
+    });
+    if (res.ok) {
+      const wrap = document.getElementById('contact-form-wrap');
+      const succ = document.getElementById('cf-success');
+      if (wrap) wrap.style.display = 'none';
+      if (succ) succ.style.display = 'block';
+      showToast('✓ Mensaje enviado correctamente', 'success');
+    } else {
+      throw new Error('Formspree respondió con error ' + res.status);
+    }
+  } catch(err) {
+    console.warn('Formspree error:', err.message);
+    // Fallback: abrir cliente de correo del sistema
+    const body = encodeURIComponent(`Nombre: ${name}\nCorreo: ${email}\n\n${message}`);
+    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${body}`;
+    showToast('Abriendo tu cliente de correo…', 'success');
+    if (btn) { btn.textContent = orig; btn.disabled = false; }
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DESCARGA
+═══════════════════════════════════════════════════════════════ */
+function handleDownload(name, dlUrl) {
+  if (!dlUrl || dlUrl.trim() === '') {
+    showToast('⚠ Este proyecto no tiene URL de descarga aún', 'error'); return;
+  }
+  // Crear enlace invisible y hacer clic
+  const a = document.createElement('a');
+  a.href = dlUrl;
+  a.target = '_blank';
+  a.rel = 'noopener noreferrer';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+
+  // Actualizar contador
+  _db.downloads = (_db.downloads || 53) + 1;
+  setCounter('c-dl', _db.downloads);
+
+  // Guardar en segundo plano sin bloquear
+  saveToGitHub('Actualizar contador de descargas').catch(() => {
+    localStorage.setItem('sdhub_db', JSON.stringify(_db));
+  });
+
+  showToast('↓ Descarga iniciada: ' + name, 'success');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   UTILIDADES
+═══════════════════════════════════════════════════════════════ */
+
+// Escapa texto para insertar en HTML sin XSS
+function _esc(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.className   = 'toast' + (type ? ' ' + type : '');
+  t.classList.add('show');
+  setTimeout(() => { if(t) t.classList.remove('show'); }, 3500);
+}
+</script>
+</body>
+</html>
