@@ -1,34 +1,135 @@
 {
-  "projects": [],
-  "tools": [
+  "projects": [
     {
-      "id": "1781215876488",
-      "name": "hbb",
-      "icon": "ð",
-      "desc": "hhhhhhhhhhh",
-      "url": "file:///C:/Users/HP/Desktop/dev/proximante"
-    },
-    {
-      "id": "1781216099637",
-      "name": "nnnnnnnnnnnnnnnnnn",
-      "icon": "ð¥ï¸",
-      "desc": "bbbbbbbbbbbbbbbbbb",
-      "url": "https://claude.ai/chat/3b029f72-9999-4405-9dd2-c67495bb5a4d"
-    },
-    {
-      "id": "1781298531871",
-      "name": "eeeeeeeeeeeee",
-      "icon": "ð§",
-      "desc": "eeeeeeeeeeeeeeeeeeeeeeee",
-      "url": "https://www.youtube.com/watch?v=w4ybJYvKM_o&list=RDw4ybJYvKM_o&start_radio=1"
-    },
-    {
-      "id": "1781298770835",
-      "name": "wwwwwwww",
-      "icon": "ð§ ",
-      "desc": "wwwwwwwwwwwwww",
-      "url": "https://www.youtube.com/watch?v=w4ybJYvKM_o&list=RDw4ybJYvKM_o&start_radio=1"
+      "id": "1780951840736",
+      "name": "Doc-vision",
+      "ver": "V1.0",
+      "cat": "Automatización",
+      "desc": "**DocVision** transforma documentos físicos en archivos digitales editables en segundos. Utiliza tecnología OCR avanzada para reconocer texto, tablas y formatos, exportando resultados a Word y Excel con la mayor fidelidad posible. Ideal para empresas, estudiantes, oficinas y profesionales que necesitan digitalizar información de forma rápida y eficiente.",
+      "tags": [
+        "Python",
+        "Tkinter",
+        "OpenCV",
+        "Tesseract OCR",
+        "python-docx OpenPyXL"
+      ],
+      "gh": "",
+      "dlUrl": "https://github.com/serskynet/Hnexux-Downloads/releases/tag/docvision-v1.0"
     }
   ],
-  "downloads": 58
+  "tools": [
+    {
+      "id": "1780953567207",
+      "name": "rustdesk",
+      "icon": "🔧",
+      "desc": "El Software de Acceso Remoto y Soporte de Código Abierto Más Rápido\nCambie de TeamViewer, AnyDesk y Splashtop a RustDesk para una experiencia de escritorio remoto segura y confiable con sus propios servidores autoalojados.",
+      "url": "https://rustdesk.com/es/"
+    },
+    {
+      "id": "1781041295125",
+      "name": "Excalidraw",
+      "icon": "✏️",
+      "desc": "Pizarra digital para crear diagramas técnicos, arquitecturas de software, flujos de negocio y\ndocumentación visual de manera rápida.",
+      "url": "https://excalidraw.com/"
+    },
+    {
+      "id": "1781041576287",
+      "name": "N8N",
+      "icon": "⚡",
+      "desc": "Automatiza procesos empresariales conectando aplicaciones, bases de datos, APIs y servicios sin\nescribir grandes cantidades de código.",
+      "url": "https://n8n.io/"
+    },
+    {
+      "id": "1781041751414",
+      "name": "Hoppscotch",
+      "icon": "📡",
+      "desc": "Cliente API ultrarrápido para probar servicios REST, GraphQL y WebSockets",
+      "url": "https://hoppscotch.io/"
+    },
+    {
+      "id": "1781042123956",
+      "name": "Penpot",
+      "icon": "🎨",
+      "desc": "Diseño de interfaces colaborativo y open source ideal para equipos de desarrollo y diseño",
+      "url": "https://penpot.app/"
+    },
+    {
+      "id": "1781042239602",
+      "name": "Coolify",
+      "icon": "☁️",
+      "desc": "Alternativa gratuita a Heroku y Vercel para desplegar aplicaciones en tu propio servidor.",
+      "url": "https://coolify.io/"
+    },
+    {
+      "id": "1781042384301",
+      "name": "Metabase",
+      "icon": "📊",
+      "desc": "Crea dashboards y reportes visuales conectando bases de datos sin conocimientos avanzados.",
+      "url": "https://www.metabase.com/"
+    },
+    {
+      "id": "1781042482447",
+      "name": "Uptime Kuma",
+      "icon": "🔍",
+      "desc": "Monitorea sitios web, servidores y APIs con alertas automáticas.",
+      "url": "https://uptimekuma.org/"
+    },
+    {
+      "id": "1781042545451",
+      "name": "Flowise",
+      "icon": "🧠",
+      "desc": "Constructor visual de aplicaciones con IA y modelos de lenguaje",
+      "url": "https://flowiseai.com/"
+    },
+    {
+      "id": "1781042604957",
+      "name": "Ollama",
+      "icon": "🤖",
+      "desc": "Ejecuta modelos de inteligencia artificial localmente en tu computador.",
+      "url": "https://ollama.com/"
+    },
+    {
+      "id": "1781042711870",
+      "name": "PocketBase",
+      "icon": "🗃️",
+      "desc": "Backend ligero con autenticación, base de datos y almacenamiento integrado",
+      "url": "https://pocketbase.io/"
+    },
+    {
+      "id": "1781042785238",
+      "name": "Plausible Analytics",
+      "icon": "📈",
+      "desc": "Analítica web enfocada en privacidad y rendimiento",
+      "url": "https://plausible.io/"
+    },
+    {
+      "id": "1781043123421",
+      "name": "Draw.io",
+      "icon": "📉",
+      "desc": "Herramienta profesional para diagramas UML, bases de datos, procesos empresariales y\ndocumentación técnica.",
+      "url": "https://app.diagrams.net/"
+    },
+    {
+      "id": "1781043244198",
+      "name": "DBeaver",
+      "icon": "🗂️",
+      "desc": "Administrador universal de bases de datos compatible con MySQL, PostgreSQL, SQLite, SQL\nServer y más.",
+      "url": "https://dbeaver.io/"
+    },
+    {
+      "id": "1781043328279",
+      "name": "Appsmith",
+      "icon": "🌐",
+      "desc": "Constructor de paneles administrativos y dashboards internos para empresas y desarrolladores",
+      "url": "https://www.appsmith.com/"
+    },
+    {
+      "id": "1781043619461",
+      "name": "Awesome Self Hosted",
+      "icon": "🧰",
+      "desc": "Más de miles de aplicaciones open source organizadas por categorías:",
+      "url": "https://github.com/awesome-selfhosted/awesome-selfhosted?utm_source=chatgpt.com"
+    }
+  ],
+  "downloads": 54
 }
